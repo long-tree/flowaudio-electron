@@ -1,0 +1,33 @@
+{
+  "name": "electron",
+  "version": "1.0.0",
+  "description": "flow_test",
+  "license": "ISC",
+  "author": "tree",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.10.2",
+    "@electron-forge/maker-deb": "^7.10.2",
+    "@electron-forge/maker-rpm": "^7.10.2",
+    "@electron-forge/maker-squirrel": "^7.10.2",
+    "@electron-forge/maker-zip": "^7.10.2",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.10.2",
+    "@electron-forge/plugin-fuses": "^7.10.2",
+    "@electron/fuses": "^1.8.0",
+    "concurrently": "^9.2.1",
+    "electron": "39.2.3",
+    "electron-rebuild": "^3.2.9",
+    "nodemon": "^3.1.11"
+  },
+  "dependencies": {
+    "@coze/api": "^1.3.9",
+    "@grpc/grpc-js": "^1.14.1",
+    "@grpc/proto-loader": "^0.8.0",
+    "electron-squirrel-startup": "^1.0.1"
+  }
+}

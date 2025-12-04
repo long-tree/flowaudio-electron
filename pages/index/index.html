@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlowAudio · Infinite AI Radio</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body class="theme-synth">
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">Flow</div>
+        <div class="brand-text">
+          <div class="title">FlowAudio</div>
+          <div class="subtitle">Infinite AI Radio</div>
+        </div>
+      </div>
+      <div class="flow-pulse" aria-label="flow-active">
+        <span class="dot"></span>
+        <span class="pulse-label">Flow live</span>
+      </div>
+      <div class="top-actions">
+        <div class="theme-switch">
+          <button data-theme="synth" class="theme-btn active">Synth</button>
+          <button data-theme="classical" class="theme-btn">Classical</button>
+          <button data-theme="y2k" class="theme-btn">Y2K</button>
+        </div>
+        <div class="session-info">
+          <div class="info-row"><span>Mode</span><strong id="mode-label">Text</strong></div>
+          <div class="info-row"><span>Last screenshot</span><strong id="screenshot-label">--</strong></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="now-playing card">
+        <div class="card-header">
+          <div>
+            <p class="eyebrow">DJ (hidden stream)</p>
+            <h2>Now Playing</h2>
+          </div>
+          <div class="pill" id="llm-status">waiting</div>
+        </div>
+        <div class="track-visual">
+          <div class="orbital">
+            <div class="orbit orbit-a"></div>
+            <div class="orbit orbit-b"></div>
+            <div class="orbit orbit-c"></div>
+            <div class="core">∞</div>
+          </div>
+          <div class="track-meta">
+            <div class="track-title" id="track-title">—</div>
+            <div class="track-artist" id="track-artist">—</div>
+            <div class="track-style" id="track-style">—</div>
+            <audio id="track-audio" controls></audio>
+          </div>
+        </div>
+      </section>
+
+      <section class="conversation card">
+        <div class="card-header">
+          <div>
+            <p class="eyebrow">Hosts & Audience</p>
+            <h2>Flowboard</h2>
+          </div>
+          <div class="pill pill-quiet" id="event-label">idle</div>
+        </div>
+        <div class="chat-grid">
+          <div class="hosts" id="hosts"></div>
+          <div class="danmaku-shell">
+            <div class="danmaku-overlay" id="danmaku"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="controls card">
+        <div class="card-header">
+          <div>
+            <p class="eyebrow">Input</p>
+            <h2>Steer the flow</h2>
+          </div>
+          <div class="pill pill-live" id="run-id-label">no run</div>
+        </div>
+        <div class="input-block">
+          <label class="field">
+            <span>Text prompt</span>
+            <textarea id="text-input" rows="3" placeholder="Tell the DJ what you want to hear…"></textarea>
+          </label>
+          <div class="field grid">
+            <label>
+              <span>Process hint</span>
+              <input id="process-input" placeholder="vscode, chrome, feishu">
+            </label>
+            <label>
+              <span>Screenshot URL</span>
+              <input id="screenshot-input" placeholder="https://...png">
+            </label>
+          </div>
+          <div class="buttons">
+            <button id="start-text" class="primary">Send text</button>
+            <button id="start-process" class="ghost">Send process + screenshot</button>
+            <button id="stop-run" class="ghost danger">Stop</button>
+          </div>
+        </div>
+        <div class="status-block">
+          <div class="status-item">
+            <span class="label">Stream</span>
+            <span class="value" id="stream-status">disconnected</span>
+          </div>
+          <div class="status-item">
+            <span class="label">Last event</span>
+            <span class="value" id="last-event">—</span>
+          </div>
+          <div class="status-item">
+            <span class="label">Detected state</span>
+            <span class="value" id="user-state">unknown</span>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>
