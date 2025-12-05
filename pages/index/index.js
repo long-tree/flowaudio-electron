@@ -121,6 +121,10 @@
     if (!payload) return;
     if (payload.host1 || payload.host1_comment) pushHost('host1', payload.host1 || payload.host1_comment);
     if (payload.host2 || payload.host2_comment) pushHost('host2', payload.host2 || payload.host2_comment);
+    // 评论节点 s1/s2/s3/l1 归为主持人1
+    ['s1', 's2', 's3', 'l1'].forEach((k) => payload[k] && pushHost('host1', payload[k]));
+    // reply 节点 r1-r4 归为主持人2
+    ['r1', 'r2', 'r3', 'r4'].forEach((k) => payload[k] && pushHost('host2', payload[k]));
     if (payload.audience) {
       const arr = Array.isArray(payload.audience) ? payload.audience : [payload.audience];
       arr.forEach((line) => line && pushAudience(line));
@@ -133,10 +137,17 @@
         style: payload.style || payload.genre || 'Flow mix',
       });
     }
+    // 主持人语音/回复的音频链接
+    if (payload.tts) pushHost('host1', `语音: ${payload.tts}`);
+    ['link1', 'link2', 'link3', 'link4'].forEach((k) => {
+      if (payload[k]) pushHost('host2', `语音: ${payload[k]}`);
+    });
     if (payload.raw && typeof payload.raw === 'string') {
       pushHost('host1', payload.raw);
     }
   }
+
+  const partials = new Map();
 
   function handlePacket(packet = {}) {
     const event = packet.event || packet.type || 'Message';
@@ -151,8 +162,17 @@
       setStatus('stream', 'completed');
       return;
     }
-    const payload = parseContent(packet.data?.content ?? packet.content);
-    applyParsedPayload(payload);
+    const contentPiece = packet.data?.content ?? packet.content;
+    const key = packet.data?.node_execute_uuid || packet.data?.node_id || `pkt-${packet.id}`;
+    const isFinish = packet.data?.node_is_finish;
+    const current = partials.get(key) || '';
+    const merged = contentPiece ? current + contentPiece : current;
+    if (contentPiece) partials.set(key, merged);
+    if (isFinish || packet.data?.node_type === 'End') {
+      const payload = parseContent(merged);
+      applyParsedPayload(payload);
+      partials.delete(key);
+    }
   }
 
   // Mock stream if preload bridge is unavailable.

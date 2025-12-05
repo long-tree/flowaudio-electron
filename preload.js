@@ -1,10 +1,19 @@
 const { contextBridge, ipcRenderer } = require('electron');
-const { CozeAPI } = require('@coze/api');
+
+let CozeAPI;
+try {
+  // 明确抛出缺失提示，避免 preload 静默失败
+  ({ CozeAPI } = require('@coze/api'));
+} catch (err) {
+  console.error('[preload] 加载 @coze/api 失败，请在项目根目录执行 npm install');
+  throw err;
+}
 
 // Coze workflow client
 const cozeClient = new CozeAPI({
-  token: 'pat_JmVtS89Ru052QdVwrAMYDy2SHd2bRx2YUyti2vfxKELoUbVLv48tleBCRe2D4m0D',
+  token: '',
   baseURL: 'https://api.coze.cn',
+  allowPersonalAccessTokenInBrowser: true, // preload 在 sandbox 中被视作 browser，需要显式允许 PAT
 });
 
 const activeStreams = new Map();
@@ -13,7 +22,11 @@ let streamCounter = 0;
 async function startStream(input = {}, onEvent) {
   const params = {
     workflow_id: '7574737601769340934',
-    parameters: {},
+    parameters: {
+    "pic_input": "https://p26-bot-workflow-sign.byteimg.com/tos-cn-i-mdko3gqilj/753475da83e542e8b07f430f8085692f.png~tplv-mdko3gqilj-image.image?rk3s=81d4c505&x-expires=1795962260&x-signature=%2BfaGLUG8KSPBAaltGV%2FugafKdl0%3D&x-wf-file_name=%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE+2025-06-28+202506.png",
+    "process_input": "chrome,iqyi,bilibili",
+    "text_input": ""
+    },
   };
 
   if (input.text_input) params.parameters.text_input = input.text_input;
